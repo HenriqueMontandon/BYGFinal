@@ -147,3 +147,11 @@ LOGIN_URL = 'login'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True  # Ou EMAIL_USE_SSL = True se necessário
+EMAIL_PORT = 587  # Ou a porta correta do Outlook se for diferente
+EMAIL_HOST = 'smtp.office365.com'  # Host SMTP do Outlook/Microsoft 365
+EMAIL_HOST_USER = 'bygsiteoficial@outlook.com'  # Seu endereço de e-mail do Outlook
+EMAIL_HOST_PASSWORD = 'Contato5!'  # Sua senha do Outlook
