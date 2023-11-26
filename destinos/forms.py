@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models import Destino, Review, List
+from .models import PreferenciaTipo
 
 class DestinoForm(ModelForm):
     class Meta:
@@ -29,3 +30,8 @@ class ReviewRoteiroForm(ModelForm):
         labels = {
             'text': 'Resenha',
         }
+
+class PreferenciaTipoForm(ModelForm):
+    class Meta:
+        model = PreferenciaTipo
+        fields = ['nome']  # Campos do formulário para adicionar preferência tipo

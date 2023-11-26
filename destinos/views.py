@@ -6,7 +6,9 @@ from django.views import generic
 from .forms import DestinoForm, ReviewRoteiroForm, RoteiroForm
 from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from .models import PreferenciaTipo
+from .forms import PreferenciaTipoForm
+from django.contrib.auth.decorators import user_passes_test
 
 def detail_destino(request, destino_id):
     destino = get_object_or_404(Destino, pk=destino_id)
@@ -105,3 +107,41 @@ class delete_Roteiro(LoginRequiredMixin, generic.DeleteView):
     model = List
     success_url = "/"
     template_name = "destinos/delete_roteiro.html"
+
+@login_required
+def listar_preferencias_tipo(request):
+    preferencias = PreferenciaTipo.objects.all()  # Busca todas as preferências
+
+    return render(request, 'destinos/listar_preferencias_tipo.html', {'preferencias': preferencias})
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+@login_required
+@user_passes_test(is_admin)
+def add_preferencias_tipo(request):
+    if request.method == 'POST':
+        form = PreferenciaTipoForm(request.POST)
+        if form.is_valid():
+            novo_tipo_preferencia = form.save()
+            form = PreferenciaTipoForm()
+    else:
+        form = PreferenciaTipoForm()
+
+    return render(request, 'destinos/add_preferencias_tipo.html', {'form': form})
+
+@login_required
+@user_passes_test(is_admin)
+def delete_preferencias_tipo(request):
+    if request.method == 'POST':
+        tipo_preferencia = request.POST.get('tipo_preferencia')  # Obtém o tipo de preferência a ser excluído
+        preferencias = PreferenciaTipo.objects.filter(nome=tipo_preferencia)
+        if preferencias.exists():
+            preferencias.delete()  # Exclui as preferências encontradas
+        # Renderize novamente a página atual após a exclusão
+        preferencias_atualizadas = PreferenciaTipo.objects.all()  # Obtém todas as preferências atualizadas
+        return render(request, 'destinos/listar_preferencias_tipo.html', {'preferencias': preferencias_atualizadas})
+
+    # Se houver um erro ou ação inválida, renderize a página novamente
+    preferencias = PreferenciaTipo.objects.all()  # Obtém todas as preferências
+    return render(request, 'destinos/listar_preferencias_tipo.html', {'preferencias': preferencias})

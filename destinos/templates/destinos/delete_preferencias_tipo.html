@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Excluir Tipo de Preferência</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="id_tipo_preferencia">Tipo de Preferência a ser Excluído:</label>
+    <input type="text" id="id_tipo_preferencia" name="tipo_preferencia">
+    <button type="submit">Excluir</button>
+</form>
+{% endblock %}
