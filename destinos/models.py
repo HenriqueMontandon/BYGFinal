@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.db import models
 
+
 class Empresa(models.Model):
     razao_social = models.CharField(max_length=255)
     nome_fantasia = models.CharField(max_length=255)
@@ -43,3 +44,20 @@ class Review(models.Model):
 
     def __str__(self):
         return f'"{self.text}" - {self.author.username}'
+    
+from django.db import models
+from django.contrib.auth.models import User
+
+class PreferenciaTipo(models.Model):
+    nome = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nome
+
+class Preferencia(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    preferencia_tipo = models.ForeignKey(PreferenciaTipo, on_delete=models.CASCADE)
+    nota = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.usuario.username} - {self.preferencia_tipo.nome}: {self.nota}'

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Preferências</h1>
+    <ul>
+        {% for preferencia in preferencias %}
+            <li>{{ preferencia.nome }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated and user.is_staff %}
+        <a href= "{% url 'destinos:add_preferencias_tipo' %}">Adicionar Preferência</a>
+    <h2>Remover Preferência</h2>
+<form method="post" action="{% url 'destinos:delete_preferencias_tipo' %}">
+    {% csrf_token %}
+    <label for="id_tipo_preferencia">Digite o Tipo de Preferência a ser Removido:</label>
+    <input type="text" id="id_tipo_preferencia" name="tipo_preferencia">
+    <button type="submit">Remover</button>
+</form>
+    {% endif %}
+{% endblock %}

@@ -11,6 +11,11 @@ urlpatterns = [
     path('lists/create', views.ListCreateView.as_view(), name='create-list'),
     path('<int:destino_id>/', views.detail_destino, name='detail'),
     path('lists/<int:pk>/', views.RoteiroDetailView, name='roteiro'),
-    path('lists/update/<int:pk>/', views. update_Roteiro.as_view(), name="update"),
-    path('lists/delete/<int:pk>', views.delete_Roteiro.as_view(), name ='delete')
+    path('lists/update/<int:pk>/', views.update_Roteiro.as_view(), name="update"),
+    path('lists/delete/<int:pk>', views.delete_Roteiro.as_view(), name ='delete'),
+    path('listar_preferencias_tipo/', views.listar_preferencias_tipo, name='listar_preferencias_tipo'),
+    path('add_preferencias_tipo/', views.add_preferencias_tipo, name='add_preferencias_tipo'),
+    path('delete_preferencias_tipo/', views.delete_preferencias_tipo, name='delete_preferencias_tipo'),
+    path('meu_perfil/', views.meu_perfil, name='meu_perfil'),
+    path('remover_preferencia/<int:preferencia_id>/', views.remover_preferencia, name='remover_preferencia'),
 ]
