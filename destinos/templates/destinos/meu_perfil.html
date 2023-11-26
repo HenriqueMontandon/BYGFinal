@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Meu Perfil</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+
+<h2>Suas preferências e notas atuais:</h2>
+<ul>
+    {% for preferencia in preferencias_usuario %}
+        <li>
+            {{ preferencia.preferencia_tipo.nome }}: {{ preferencia.nota }}
+            <a href="{% url 'destinos:remover_preferencia' preferencia.pk %}">Remover</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock content %}

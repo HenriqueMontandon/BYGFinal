@@ -16,4 +16,6 @@ urlpatterns = [
     path('listar_preferencias_tipo/', views.listar_preferencias_tipo, name='listar_preferencias_tipo'),
     path('add_preferencias_tipo/', views.add_preferencias_tipo, name='add_preferencias_tipo'),
     path('delete_preferencias_tipo/', views.delete_preferencias_tipo, name='delete_preferencias_tipo'),
+    path('meu_perfil/', views.meu_perfil, name='meu_perfil'),
+    path('remover_preferencia/<int:preferencia_id>/', views.remover_preferencia, name='remover_preferencia'),
 ]
