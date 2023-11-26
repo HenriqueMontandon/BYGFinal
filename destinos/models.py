@@ -1,12 +1,19 @@
 from django.db import models
 from django.conf import settings
+from django.db import models
 
 class Empresa(models.Model):
-    CNPJ = models.CharField(max_length=255)
-    nomeFantasia = models.CharField(max_length=255)
+    razao_social = models.CharField(max_length=255)
+    nome_fantasia = models.CharField(max_length=255)
+    cnpj = models.CharField(max_length=255)
+    endereco = models.CharField(max_length=255)
+    criacao_data = models.DateTimeField(auto_now_add=True)  # Data de criação da empresa no sistema
+    delecao_data = models.DateTimeField(null=True, blank=True)  # Data de deleção da empresa no sistema
+    email_contato = models.EmailField(max_length=255)  # Email de contato da empresa
+    telefone = models.CharField(max_length=20)  # Telefone da empresa
 
-    def __str__(self):
-        return f'{self.nomeFantasia}'
+    def _str_(self):
+        return f'{self.nome_fantasia}'
 
 class Destino(models.Model):
     name = models.CharField(max_length=255)
