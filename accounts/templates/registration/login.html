@@ -9,9 +9,17 @@ Login
 
 <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
-    {{ form.as_p}}
+    {{ form.as_p }}
     <button type="submit" value="login">Entrar</button>
     <input type="hidden" name="next" value="{{ next }}">
 </form>
+
+<!-- Botão para cadastro de usuário -->
 <a href="{% url 'signup' %}"><button type="button">Cadastre-se</button></a>
+
+<!-- Quebra de linha para posicionar o botão abaixo -->
+<br>
+
+<!-- Botão para login de empresa -->
+<a href="{% url 'empresa_signup' %}"><button type="button">Cadastre a sua Empresa</button></a>
 {% endblock %}

@@ -1,14 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-
-class Empresa(models.Model):
-    CNPJ = models.CharField(max_length=255)
-    nomeFantasia = models.CharField(max_length=255)
-
-    def __str__(self):
-        return f'{self.nomeFantasia}'
-
 class Destino(models.Model):
     name = models.CharField(max_length=255)
     categoria = models.CharField(max_length=255)
