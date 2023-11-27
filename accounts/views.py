@@ -33,25 +33,22 @@ def empresa_signup(request):
     if request.method == 'POST':
         form = EmpresaSignUpForm(request.POST)
         if form.is_valid():
-            empresa = form.save(commit=False)
-            # Salvando a empresa
-            empresa.save()
-
             # Criando um usuário associado à empresa
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = User.objects.create_user(username=username, email=email, password=password)
             
-            # Associando o usuário à empresa
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password
+            )
+
+            empresa = form.save(commit=False)
             empresa.user = user
             empresa.save()
 
-            # Autenticando e logando o usuário
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return HttpResponseRedirect(reverse('index')) 
+            return HttpResponseRedirect(reverse('index'))
     else:
         form = EmpresaSignUpForm()
     
