@@ -1,10 +1,13 @@
 from django.db import models
 from django.conf import settings
-from django.db import models
+from django.contrib.auth.models import User
 
-class Categoria(models.Modek):
+class Categoria(models.Model):
     name = models.CharField(max_length=255)
     data_criacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 class Empresa(models.Model):
     razao_social = models.CharField(max_length=255)
@@ -21,9 +24,9 @@ class Empresa(models.Model):
     
 class Destino(models.Model):
     name = models.CharField(max_length=255)
-    destino_url = models.URLField(max_length=200, null=True)
+    destino_url = models.URLField(max_length=200)
     descricao = models.CharField(max_length=1000)
-    coordenadas = models.CharField(max_length = 100)
+    coordenadas = models.CharField(max_length=100, default='(-23.4339, -45.0833)')
     preco = models.FloatField()
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     empresaid=models.ForeignKey(Empresa, on_delete=models.CASCADE)
@@ -39,11 +42,11 @@ class List(models.Model):
     Capa = models.URLField(max_length=5000, null=True)
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_alteracao = models.DateTimeField(auto_now= True)
-    duracao = models.IntegerField()
+    duracao = models.IntegerField(null=True)
     nome = models.CharField(max_length=255)
     descricao = models.CharField(max_length=1000)
-    comentario = models.CharField(max_length=500)
-    nota = models.IntegerField()
+    comentario = models.CharField(max_length=500, null=True)
+    nota = models.IntegerField(null=True)
 
     def _str_(self):
         return f'Roteiro by {self.autor.username}'
@@ -69,9 +72,6 @@ class Review(models.Model):
 
     def __str__(self):
         return f'"{self.text}" - {self.author.username}'
-    
-from django.db import models
-from django.contrib.auth.models import User
 
 class PreferenciaTipo(models.Model):
     nome = models.CharField(max_length=255)
