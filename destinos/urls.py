@@ -18,4 +18,10 @@ urlpatterns = [
     path('delete_preferencias_tipo/', views.delete_preferencias_tipo, name='delete_preferencias_tipo'),
     path('meu_perfil/', views.meu_perfil, name='meu_perfil'),
     path('remover_preferencia/<int:preferencia_id>/', views.remover_preferencia, name='remover_preferencia'),
+    path('lists/<int:pk>/addEvento', views.CreateEventoView.as_view(), name ='addEvento'),
+    path('createCategory/', views.CreateCategoriaView.as_view(), name='createCategoria'),
+    path('listCategorias/', views.listCategorias.as_view(), name='listCategorias'),
+    path('categoria/<int:pk>/delete', views.deleteCategoriaView.as_view(), name='deleteCategoria'),
+    path('<int:pk>/add_atracao_caracteristica/', views.add_atracao_caracteristica, name='add_atracao_caracteristica'),
+    path('remover_atracao_caracteristica/<int:caracteristica_id>/', views.remover_atracao_caracteristica, name='remover_atracao_caracteristica'),
 ]
