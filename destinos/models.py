@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 
+
 class Categoria(models.Model):
     name = models.CharField(max_length=255)
     data_criacao = models.DateTimeField(auto_now_add=True)
@@ -23,6 +24,7 @@ class Empresa(models.Model):
     def _str_(self):
         return f'{self.nome_fantasia}'
     
+
 class Destino(models.Model):
     name = models.CharField(max_length=255)
     destino_url = models.URLField(max_length=200)
