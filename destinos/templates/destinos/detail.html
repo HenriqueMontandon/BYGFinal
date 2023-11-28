@@ -10,5 +10,12 @@
         <li>Descrição: {{destino.descricao}}
       </ul>
     </section>
+
+    
+    {% if user.is_authenticated and user.is_staff %}
+        <div>
+            <a href="{% url 'destinos: add_atracao_caracteristica' pk=destino.id %}">Caracteristicas da Atração</a>
+        </div>
+    {% endif %}
     
     {% endblock content %}

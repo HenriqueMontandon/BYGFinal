@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 
+
 class Categoria(models.Model):
     name = models.CharField(max_length=255)
     data_criacao = models.DateTimeField(auto_now_add=True)
@@ -86,3 +87,12 @@ class Preferencia(models.Model):
 
     def __str__(self):
         return f'{self.usuario.username} - {self.preferencia_tipo.nome}: {self.nota}'
+
+
+class AtracaoCaracteristica(models.Model):
+    atracao = models.ForeignKey(Destino,on_delete=models.CASCADE)
+    nota = models.IntegerField(default=0)
+    caracteristica_tipo = models.ForeignKey(PreferenciaTipo,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.atracao

@@ -7,6 +7,10 @@ from .forms import DestinoForm, ReviewRoteiroForm, RoteiroForm, PreferenciaTipoF
 from django.contrib.auth.decorators import login_required,permission_required,user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin,  UserPassesTestMixin
 from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import AtracaoCaracteristica
+from .forms import AtracaoCaracteristicaForm
 
 def detail_destino(request, destino_id):
     destino = get_object_or_404(Destino, pk=destino_id)
@@ -225,3 +229,34 @@ class CreateEventoView(UserPassesTestMixin, View):
             form.save()
             return redirect('destinos:roteiro', pk=roteiro.pk)
         return render(request, self.template_name, {'form': form})
+
+@login_required
+def add_atracao_caracteristica(request,pk):
+    caracteristicas_da_atracao = AtracaoCaracteristica.objects.filter(atracao=pk)
+
+    if request.method == 'POST':
+        form = AtracaoCaracteristicaForm(request.POST)
+        if form.is_valid():
+            caracteristicas_da_atracao = form.save(commit=False)
+            caracteristicas_da_atracao.atracao = pk
+            caracteristicas_da_atracao.save()
+    else:
+        form = AtracaoCaracteristicaForm()
+
+    caracteristicas_disponiveis  = PreferenciaTipo.objects.all()
+
+    return render(request, 'destinos/add_atracao_caracteristica.html', {
+        'form': form,
+        'caracteristicas_disponiveis ': caracteristicas_disponiveis ,
+        'caracteristicas_da_atracao':caracteristicas_da_atracao
+    })
+
+@login_required
+def remover_atracao_caracteristica(request, caracteristica_id):
+    caracteristica = get_object_or_404(AtracaoCaracteristica, pk=caracteristica_id)
+    
+    if request.method == 'POST':
+        caracteristica.delete()
+        return redirect('destinos:listar_atracao_caracteristicas')
+    
+    return render(request, 'destinos/remover_atracao_caracteristica.html', {'caracteristica': caracteristica})
