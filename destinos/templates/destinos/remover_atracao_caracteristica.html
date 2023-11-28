@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Remover Característica de Atração</h1>
+    <p>Tem certeza que deseja remover esta característica de atração?</p>
+    <p>Característica: {{ caracteristica.nome }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Confirmar Remoção">
+    </form>
+{% endblock %}

@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from .models import Destino, Review, List, Evento, Categoria
 from .models import PreferenciaTipo, Preferencia
 from django import forms
+from .models import AtracaoCaracteristica
 
 class DestinoForm(ModelForm):
     class Meta:
@@ -11,6 +12,7 @@ class DestinoForm(ModelForm):
             'categoria',
             'descricao',
             'destino_url',
+            'empresaid',
             'coordenadas',
             'preco',
         ]
@@ -47,6 +49,16 @@ class PreferenciaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['nota'].widget = forms.NumberInput(attrs={'min': '1', 'max': '10', 'placeholder': 'Atribua uma nota (1-10)'})
+
+
+class AtracaoCaracteristicaForm(forms.ModelForm):
+    class Meta:
+        model = AtracaoCaracteristica
+        fields = ['caracteristica_tipo','nota']  # Campos do formulário para adicionar características de atração
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['nota'].widget = forms.NumberInput(attrs={'min': '1', 'max': '10', 'placeholder': 'Atribua uma nota (1-10)'})  # Personalização do widget para o campo 'nome'
 
 class EventoForm(forms.ModelForm):
     class Meta:
