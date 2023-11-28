@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from accounts.models import Empresa
 
 
 
@@ -10,19 +11,6 @@ class Categoria(models.Model):
 
     def __str__(self):
         return self.name
-
-class Empresa(models.Model):
-    razao_social = models.CharField(max_length=255)
-    nome_fantasia = models.CharField(max_length=255)
-    cnpj = models.CharField(max_length=255)
-    endereco = models.CharField(max_length=255)
-    criacao_data = models.DateTimeField(auto_now_add=True)  # Data de criação da empresa no sistema
-    delecao_data = models.DateTimeField(null=True, blank=True)  # Data de deleção da empresa no sistema
-    email_contato = models.EmailField(max_length=255)  # Email de contato da empresa
-    telefone = models.CharField(max_length=20)  # Telefone da empresa
-
-    def _str_(self):
-        return f'{self.nome_fantasia}'
     
 
 class Destino(models.Model):
@@ -55,10 +43,10 @@ class List(models.Model):
         return f'Roteiro by {self.autor.username}'
 
 class Evento(models.Model):
-    destino_id = models.ForeignKey(Destino, on_delete=models.CASCADE)
+    destino = models.ForeignKey(Destino, on_delete=models.CASCADE)
     roteiro_id = models.ForeignKey(List, on_delete=models.CASCADE)
-    data_inicio = models.DateTimeField()
-    data_fim = models.DateTimeField()
+    data_inicio = models.DateField()
+    data_fim = models.DateField()
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_delecao = models.DateTimeField(null = True)
     comentario = models.CharField(max_length=500, null = True)

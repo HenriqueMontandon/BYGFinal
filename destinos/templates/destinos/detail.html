@@ -1,21 +1,29 @@
-{% extends 'base.html' %} {% block title %} {{ destino.name }} ({{
-    destino.categoria }} {% endblock title %} {% block content %}
+{% extends 'base.html' %} {% block title %} {{ destino.name }} ({{ destino.categoria }}) {% endblock title %} {% block content %}
     <h2>{{ destino.name }}</h2>
     
     <section class="descricao-do-destino">
-      <img src="{{ destino.destino_url }}" alt="Paisagem de {{ destino.name}}" />
-      <ul>
-        <li>Nome: {{ destino.name}}
-        <li>Categoria: {{ destino.categoria}}</li>
-        <li>Descrição: {{destino.descricao}}
-      </ul>
+        <div class="image-container">
+            <img src="{{ destino.destino_url }}" width="500" height="300" alt="Paisagem de {{ destino.name }}" />
+        </div>
+        <ul>
+            <li>Nome: {{ destino.name }}</li>
+            <li>Categoria: {{ destino.categoria }}</li>
+            <li>Descrição: {{ destino.descricao }}</li>
+        </ul>
     </section>
 
-    
     {% if user.is_authenticated and user.is_staff %}
         <div>
-            <a href="{% url 'destinos: add_atracao_caracteristica' pk=destino.id %}">Caracteristicas da Atração</a>
+            <a href="{% url 'destinos:add_atracao_caracteristica' pk=destino.id %}">Caracteristicas da Atração</a>
         </div>
     {% endif %}
-    
-    {% endblock content %}
+
+    <h2>Caracteristicas:</h2>
+    <ul>
+    {% for atracao_caracteristica in caracteristicas_da_atracao %}
+        <li>
+            {{ atracao_caracteristica.caracteristica_tipo.nome }}: {{ atracao_caracteristica.nota }}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

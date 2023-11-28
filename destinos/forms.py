@@ -63,7 +63,7 @@ class AtracaoCaracteristicaForm(forms.ModelForm):
 class EventoForm(forms.ModelForm):
     class Meta:
         model = Evento
-        fields = ['destino_id', 'data_inicio', 'data_fim']
+        fields = ['destino', 'data_inicio', 'data_fim']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -14,7 +14,9 @@ from .forms import AtracaoCaracteristicaForm
 
 def detail_destino(request, destino_id):
     destino = get_object_or_404(Destino, pk=destino_id)
-    context = {"destino": destino}
+    caracteristicas_da_atracao = AtracaoCaracteristica.objects.filter(atracao=destino)
+    context = {"destino": destino, 
+               "caracteristicas_da_atracao": caracteristicas_da_atracao}
     return render(request, "destinos/detail.html", context)
 
 
@@ -231,24 +233,25 @@ class CreateEventoView(UserPassesTestMixin, View):
         return render(request, self.template_name, {'form': form})
 
 @login_required
-def add_atracao_caracteristica(request,pk):
-    caracteristicas_da_atracao = AtracaoCaracteristica.objects.filter(atracao=pk)
+def add_atracao_caracteristica(request, pk):
+    destino = get_object_or_404(Destino, pk=pk)
+    caracteristicas_da_atracao = AtracaoCaracteristica.objects.filter(atracao=destino)
 
     if request.method == 'POST':
         form = AtracaoCaracteristicaForm(request.POST)
         if form.is_valid():
             caracteristicas_da_atracao = form.save(commit=False)
-            caracteristicas_da_atracao.atracao = pk
+            caracteristicas_da_atracao.atracao = destino
             caracteristicas_da_atracao.save()
     else:
         form = AtracaoCaracteristicaForm()
 
-    caracteristicas_disponiveis  = PreferenciaTipo.objects.all()
+    caracteristicas_disponiveis = PreferenciaTipo.objects.all()
 
     return render(request, 'destinos/add_atracao_caracteristica.html', {
         'form': form,
-        'caracteristicas_disponiveis ': caracteristicas_disponiveis ,
-        'caracteristicas_da_atracao':caracteristicas_da_atracao
+        'caracteristicas_disponiveis': caracteristicas_disponiveis,
+        'caracteristicas_da_atracao': caracteristicas_da_atracao
     })
 
 @login_required

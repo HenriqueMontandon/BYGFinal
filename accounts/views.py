@@ -30,10 +30,6 @@ def send_welcome_email(user_email):
     from_email = 'bygsiteoficial@outlook.com'  # Seu endereço de e-mail
     send_mail(subject, message, from_email,[user_email])
 
-from django.contrib.auth.models import Group
-
-from django.contrib.auth.models import Group
-
 def empresa_signup(request):
     if request.method == 'POST':
         form = EmpresaSignUpForm(request.POST)
