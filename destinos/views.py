@@ -1,13 +1,12 @@
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404, get_list_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from .models import Destino, List
-from django.views import generic
-from .forms import DestinoForm, ReviewRoteiroForm, RoteiroForm, PreferenciaTipoForm, PreferenciaForm
-from django.contrib.auth.decorators import login_required,permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import PreferenciaTipo, Preferencia
-from django.contrib.auth.decorators import user_passes_test
+from .models import Destino, List, Evento, PreferenciaTipo, Preferencia, Categoria
+from django.views import generic, View
+from .forms import DestinoForm, ReviewRoteiroForm, RoteiroForm, PreferenciaTipoForm, PreferenciaForm, EventoForm, CategoriaForm
+from django.contrib.auth.decorators import login_required,permission_required,user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin,  UserPassesTestMixin
+from django.contrib import messages
 
 def detail_destino(request, destino_id):
     destino = get_object_or_404(Destino, pk=destino_id)
@@ -34,22 +33,52 @@ def create_destino(request):
     if request.method == 'POST':
         form = DestinoForm(request.POST)
         if form.is_valid():
-            destino_name = form.cleaned_data['name']
-            destino_categoria = form.cleaned_data['categoria']
-            destino_descricao = form.cleaned_data['descricao']
-            destino_url = form.cleaned_data['destino_url']
-            destino = Destino(name=destino_name,
-                          categoria=destino_categoria,
-                          descricao=destino_descricao,
-                          destino_url=destino_url,
-                          likes=0)
-            destino.save()
-            return HttpResponseRedirect(
-                reverse('destinos:detail', args=(destino.id, )))
+            destino = form.save()
+            return HttpResponseRedirect(reverse('destinos:detail', args=(destino.id,)))
     else:
         form = DestinoForm()
+
     context = {'form': form}
     return render(request, 'destinos/create.html', context)
+
+class CreateCategoriaView(UserPassesTestMixin, View):
+    template_name = 'destinos/createCategoria.html'  
+    form_class = CategoriaForm  
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'You are not authorized to create a category.')
+        return redirect('destinos:index')  
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('destinos:listCategorias')  
+
+        return render(request, self.template_name, {'form': form})
+    
+class listCategorias(generic.ListView):
+    model = Categoria
+    template_name = 'destinos/listCategorias.html'
+
+class deleteCategoriaView(LoginRequiredMixin, generic.DeleteView):
+    model = Categoria
+    template_name = 'destinos/deleteCategoria.html'
+    success_url = '/'
+
+    def test_func(self):
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        messages.error(self.request, 'You are not authorized to delete a category.')
+        return redirect('posts:index')
 
 class ListListView(generic.ListView):
     model = List
@@ -59,7 +88,7 @@ class ListListView(generic.ListView):
 class ListCreateView(LoginRequiredMixin, generic.CreateView):
     model = List
     template_name = 'destinos/create_roteiro.html'
-    fields = ['Nome', 'atracoes', 'Capa']
+    form_class = RoteiroForm
 
     def form_valid(self, form):
         form.instance.autor = self.request.user
@@ -98,7 +127,7 @@ def RoteiroDetailView(request, pk):
 class update_Roteiro(LoginRequiredMixin, generic.UpdateView):
     model = List
     template_name = 'destinos/update.html'
-    fields = ['Nome', 'Destinos', 'Capa']
+    fields = ['nome', 'Capa', 'descricao']
     success_url = reverse_lazy('destinos:lists')
 
 
@@ -175,3 +204,24 @@ def remover_preferencia(request, preferencia_id):
         return redirect('destinos:meu_perfil')
     
     return render(request, 'destinos/remover_preferencia.html', {'preferencia': preferencia})
+
+class CreateEventoView(UserPassesTestMixin, View):
+    form_class = EventoForm
+    template_name = 'destinos/adicionarEvento.html'
+
+    def test_func(self):
+        roteiro = List.objects.get(pk=self.kwargs['pk'])
+        return self.request.user.is_staff or roteiro.autor == self.request.user
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            roteiro = List.objects.get(pk=self.kwargs['pk'])
+            form.instance.roteiro_id = roteiro
+            form.save()
+            return redirect('destinos:roteiro', pk=roteiro.pk)
+        return render(request, self.template_name, {'form': form})
