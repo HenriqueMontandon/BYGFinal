@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'destinos.apps.DestinosConfig',
     'accounts.apps.AccountsConfig',
     'posts.apps.PostsConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

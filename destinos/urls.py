@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 app_name = 'destinos'
@@ -24,4 +23,6 @@ urlpatterns = [
     path('categoria/<int:pk>/delete', views.deleteCategoriaView.as_view(), name='deleteCategoria'),
     path('<int:pk>/add_atracao_caracteristica/', views.add_atracao_caracteristica, name='add_atracao_caracteristica'),
     path('remover_atracao_caracteristica/<int:caracteristica_id>/', views.remover_atracao_caracteristica, name='remover_atracao_caracteristica'),
+    path('get_all', views.getDestinos),
+    path('post/',views.postDestino),
 ]
