@@ -1,16 +1,15 @@
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404, get_list_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from .models import Destino, List, Evento, PreferenciaTipo, Preferencia, Categoria
+from .models import Destino, List, Evento, PreferenciaTipo, Preferencia, Categoria,AtracaoCaracteristica
 from django.views import generic, View
-from .forms import DestinoForm, ReviewRoteiroForm, RoteiroForm, PreferenciaTipoForm, PreferenciaForm, EventoForm, CategoriaForm
+from .forms import DestinoForm, ReviewRoteiroForm, RoteiroForm, PreferenciaTipoForm, PreferenciaForm, EventoForm, CategoriaForm,AtracaoCaracteristicaForm
 from django.contrib.auth.decorators import login_required,permission_required,user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin,  UserPassesTestMixin
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import AtracaoCaracteristica
-from .forms import AtracaoCaracteristicaForm
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializer import DataSerializer
 
 def detail_destino(request, destino_id):
     destino = get_object_or_404(Destino, pk=destino_id)
@@ -263,3 +262,20 @@ def remover_atracao_caracteristica(request, caracteristica_id):
         return redirect('destinos:listar_atracao_caracteristicas')
     
     return render(request, 'destinos/remover_atracao_caracteristica.html', {'caracteristica': caracteristica})
+
+@api_view(['GET'])
+@user_passes_test(is_admin)
+def getDestinos(request):
+    app = Destino.objects.all()
+    serializer = DataSerializer(app, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@user_passes_test(is_admin)
+def postDestino(request):
+    serializer = DataSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
