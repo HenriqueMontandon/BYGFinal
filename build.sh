@@ -19,5 +19,5 @@ User.objects.filter(username=os.environ["DJANGO_SUPERUSER_USERNAME"]).exists() o
 
 g = Group(name="empresas_users")
 g.permissions.set([Permission.objects.get(codename=c) for c in ["view_categoria", "view_review", "view_categorie", "view_comment"]])
-Group.objects.filter(name="empresas_users").exists() or g.save()
+Group.objects.filter(name="empresas_users").exists() or g.save()
 EOF
