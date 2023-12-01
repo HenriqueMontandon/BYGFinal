@@ -19,7 +19,7 @@ if not User.objects.filter(username=os.environ["DJANGO_SUPERUSER_USERNAME"]).exi
 
 empresas_users_group, _ = Group.objects.get_or_create(name="empresas_users")
 
-permissions = ["view_categoria, view_review, view_categorie"]
+permissions = ["view_categoria", "view_review"]
 permissions_objs = [Permission.objects.get(codename=c) for c in permissions]
 
 for perm in permissions_objs:
