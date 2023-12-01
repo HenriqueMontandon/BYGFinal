@@ -25,4 +25,6 @@ urlpatterns = [
     path('remover_atracao_caracteristica/<int:caracteristica_id>/', views.remover_atracao_caracteristica, name='remover_atracao_caracteristica'),
     path('get_all', views.getDestinos),
     path('post/',views.postDestino),
+    path('put/<int:pk>/', views.updateDestino),
+    path('delete/<int:pk>/', views.deleteDestino),
 ]

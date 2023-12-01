@@ -279,3 +279,28 @@ def postDestino(request):
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
 
+@api_view(['PUT'])
+@user_passes_test(is_admin)
+def updateDestino(request, pk):
+    try:
+        app = Destino.objects.get(pk=pk)
+    except Destino.DoesNotExist:
+        return Response({'error': 'Destino not found'}, status=404)
+
+    serializer = DataSerializer(app, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+@user_passes_test(is_admin)
+def deleteDestino(request, pk):
+    try:
+        app = Destino.objects.get(pk=pk)
+    except Destino.DoesNotExist:
+        return Response({'error': 'Destino not found'}, status=404)
+
+    app.delete()
+    return Response(status=204)
+
