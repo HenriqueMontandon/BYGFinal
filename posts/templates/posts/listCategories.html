@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Todos as Categorias</h2>
+  <h2>Todos as Categorias de Posts</h2>
 
   <section>
     {% if user.is_authenticated and user.is_staff %}
@@ -18,6 +18,31 @@
           <p>{{ categorie.name }}</p>
           {% if user.is_authenticated and user.is_staff %}
             <a href="{% url 'posts:deleteCategory' categorie.id %}">Deletar</a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <p>Não foi encontrado nenhuma Categoria.</p>
+  {% endif %}
+
+  <h2>Todos as Categorias de Destinos</h2>
+
+  <section>
+    {% if user.is_authenticated and user.is_staff %}
+      <div>
+        <a href="{% url 'destinos:createCategoria' %}">Criar Categoria</a>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if categoria_list %}
+    <section class="lista-de-cards">
+      {% for categoria in categoria_list %}
+        <article class="card">
+          <p>{{ categoria.name }}</p>
+          {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'destinos:deleteCategoria' categoria.id %}">Deletar</a>
           {% endif %}
         </article>
       {% endfor %}
