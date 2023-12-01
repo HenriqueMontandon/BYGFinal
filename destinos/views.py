@@ -118,11 +118,7 @@ def create_review(request, roteiro_id):
     return render(request, 'destinos/review.html',context)
 
 def RoteiroDetailView(request, pk):
-     # Obtém a lista específica
-    lista = List.objects.get(pk=pk)
-
-    # Obtém os destino_id associados a essa lista
-    destino_ids = List.objects.filter(pk=pk).values_list('atracoes', flat=True)
+    destino_ids = Evento.objects.filter(roteiro_id=pk)
 
     # Obtém os destinos associados a esses destino_ids
     destinos = Destino.objects.filter(pk__in=destino_ids)
