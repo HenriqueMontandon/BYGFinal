@@ -118,12 +118,13 @@ def create_review(request, roteiro_id):
     return render(request, 'destinos/review.html',context)
 
 def RoteiroDetailView(request, pk):
+    roteiro = get_object_or_404(List, pk=pk)
     destino_ids = Evento.objects.filter(roteiro_id=pk)
 
     # Obtém os destinos associados a esses destino_ids
     destinos = Destino.objects.filter(pk__in=destino_ids)
 
-    return render(request, 'destinos/roteiro.html', {'destino_list': destinos})
+    return render(request, 'destinos/roteiro.html', {'destino_list': destinos, 'roteiro':roteiro})
 
 class update_Roteiro(LoginRequiredMixin, generic.UpdateView):
     model = List
