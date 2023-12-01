@@ -2,6 +2,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse, reverse_lazy
 from .models import Post, Categorie, Comment
+from destinos.models import Categoria
 from django.views import generic, View
 from django.views.generic import UpdateView, CreateView, DeleteView
 from .forms import PostForm, CategorieForm, CommentForm
@@ -117,10 +118,13 @@ class deleteCategorieView(LoginRequiredMixin, generic.DeleteView):
         return redirect('posts:index')
 
 
-class listCategories(generic.ListView):
-    model = Categorie
-    template_name = 'posts/listCategories.html'
-     
+class listCategories(LoginRequiredMixin, View):
+    def test_func(self):
+        return self.request.user.is_staff
+    def get(self, request):
+        categoria_list = Categoria.objects.all()
+        categorie_list = Categorie.objects.all()
+        return render(request, 'posts/listCategories.html', {'categoria_list' : categoria_list, 'categorie_list': categorie_list})
 
 class DeleteCommentView(LoginRequiredMixin, DeleteView):
     model = Comment
