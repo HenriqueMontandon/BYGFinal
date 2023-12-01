@@ -32,7 +32,7 @@
                 <li><a href="{% url 'posts:listCategories' %}">Categorias</a></li>
                 <li><a href="{% url 'destinos:listar_preferencias_tipo' %}">Preferências</a></li>
                 {% endif %}
-                {% if user.is_authenticated %}
+                {% if request.user.groups.all.0.name != "empresas_users" %}
                 <li><a href="{% url 'destinos:meu_perfil' %}">Meu Perfil</a></li>
                 {% endif %}
             </ul>
